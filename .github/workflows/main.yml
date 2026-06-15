@@ -1,6 +1,6 @@
 name: CI devops 2025
 on:
-  #to begin you want to launch this job in main and develop
+  # lance les tests sur main et develop à chaque push
   push:
     branches:
       - main
@@ -12,11 +12,9 @@ jobs:
     #les tests vont run sur une vm ubuntu
     runs-on: ubuntu-24.04
     steps:
-      #checkout your github code using actions/checkout@v4
       #récupère le code du repository avec une actions built in par github action
       - uses: actions/checkout@v4
 
-      #do the same with another action (actions/setup-java@v4) that enable to setup jdk 21
       #installe java 21 (avec une pre-built action)
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -24,51 +22,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      #finally build your app with the latest command
       #dernier step qui build et lance les tests
       - name: Build and test with Maven
         run: mvn clean verify --file simple-api/pom.xml
 
-      # lance une analyse sonarCLoud pour tester la securité, le coverage et les bugs
+      # lance une analyse sonarCloud pour tester la securité, le coverage et les bugs
       # SONAR_TOKEN est stocké sur github
       - name: SonarCloud analysis
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=youk-03_tp-devops-correction-docker -Dsonar.organization=youk-03 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./simple-api/pom.xml
-
-  # define job to build and publish docker image
-  build-and-push-docker-image:
-    needs: test-backend
-    # run only when code is compiling and tests are passing
-    runs-on: ubuntu-24.04
-
-    # steps to perform in job
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # login to docker hub using secrets
-      - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-      - name: Build image and push backend
-        uses: docker/build-push-action@v6
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./simple-api
-          # Note: tags has to be all lower-case
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
-          # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build image and push database
-        uses: docker/build-push-action@v6
-        with:
-          context: ./database
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build image and push httpd
-        uses: docker/build-push-action@v6
-        with:
-          context: ./http-server
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
