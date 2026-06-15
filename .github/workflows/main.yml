@@ -9,12 +9,15 @@ on:
 
 jobs:
   test-backend:
+  #les tests vont run sur une vm ubuntu
     runs-on: ubuntu-24.04
     steps:
      #checkout your github code using actions/checkout@v4
+     #récupère le code du repository avec une actions built in par github action
       - uses: actions/checkout@v4
 
      #do the same with another action (actions/setup-java@v4) that enable to setup jdk 21
+     #installe java 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -22,5 +25,6 @@ jobs:
           distribution: 'temurin'
 
      #finally build your app with the latest command
+     #dernier step qui build et lance les tests
       - name: Build and test with Maven
         run: mvn clean verify --file simple-api/pom.xml
