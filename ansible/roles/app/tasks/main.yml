@@ -2,8 +2,10 @@
 - name: Run backend app container
   community.docker.docker_container:
     name: simplestudentapi
-    image: ky0u/simplestudentapi:1.0
+    image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/tp-devops-simple-api:latest"
     state: started
     restart_policy: unless-stopped
     networks:
       - name: app-network
+    env:
+      DATABASE_HOST: postgrestp1

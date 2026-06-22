@@ -2,7 +2,7 @@
 - name: Run database container
   community.docker.docker_container:
     name: postgrestp1
-    image: ky0u/postgrestp1:1.0
+    image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/tp-devops-database:latest"
     state: started
     restart_policy: unless-stopped
     networks:
