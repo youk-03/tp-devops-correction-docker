@@ -1,0 +1,9 @@
+---
+- name: Run front container
+  community.docker.docker_container:
+    name: front
+    image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/tp-devops-front:latest"
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: app-network
