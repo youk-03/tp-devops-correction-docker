@@ -1,0 +1,11 @@
+all:
+  vars:
+    ansible_user: admin
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    ansible_python_interpreter: /opt/docker_venv/bin/python3
+    POSTGRES_DB: "{{ lookup('env', 'POSTGRES_DB') }}"
+    POSTGRES_USER: "{{ lookup('env', 'POSTGRES_USER') }}"
+    POSTGRES_PASSWORD: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
+  children:
+    prod:
+      hosts: 52.31.119.148

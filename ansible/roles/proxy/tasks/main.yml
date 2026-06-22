@@ -1,0 +1,11 @@
+---
+- name: Run proxy container
+  community.docker.docker_container:
+    name: httpd
+    image: ky0u/myhttpd:1.0
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: app-network
+    ports:
+      - "80:80"
