@@ -29,4 +29,4 @@ jobs:
       # lance une analyse sonarCloud pour tester la securité, le coverage et les bugs
       # SONAR_TOKEN est stocké sur github
       - name: SonarCloud analysis
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=youk-03_tp-devops-correction-docker -Dsonar.organization=youk-03 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./simple-api/pom.xml
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=youk-03_tp-devops-correction-docker -Dsonar.organization=youk-03 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }} --file ./simple-api/pom.xml
