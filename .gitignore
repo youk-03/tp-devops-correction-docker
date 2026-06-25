@@ -1,3 +1,4 @@
 .idea
 id_rsa
 .env
+.vault_pass

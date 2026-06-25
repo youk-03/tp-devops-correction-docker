@@ -77,10 +77,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy with Ansible
-        run: ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
+        run: |
+          echo "${{ secrets.VAULT_PASSWORD }}" > /tmp/.vault_pass
+          ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml --vault-password-file /tmp/.vault_pass
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
